@@ -8,6 +8,7 @@ import os
 
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
 PHONE_NUMBER_ID= os.getenv("PHONE_NUMBER")
+VERIFY_TOKEN= os.getenv("VERIFY_TOKEN")
 
 app=FastAPI()
 scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
@@ -65,3 +66,10 @@ async def webhook(request: Request):
     
     return "ok"
 
+@app.get("/webhook",response_class=PlainTextResponse)
+async def verify(
+    hub_mode: str = "", hub_verify_token: str = "", hub_challenge: str = ""
+):
+    if hub_mode == "subscribe" and hub_verify_token == VERIFY_TOKEN:
+        return hub_challenge
+    return "Verification failed"

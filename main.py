@@ -29,6 +29,12 @@ def parse_msg(text):
                 exam_time = datetime.strptime(f"{time_part} {ampm}", "%I %p" if ampm else "%H")
         except Exception:
             return None
+        now=datetime.now()
+        reminder_time=now.replace(hour=exam_time.hour, minute=exam_time.minute,second=0, microsecond=0)
+        if reminder_time <now:
+            reminder_time += timedelta(days=1)
+        return reminder_time
+    return None
     
 def remind_msg(message, to_number):
     url= f"https://graph.facebook.com/v19.0/{PHONE_NUMBER_ID}/messages"
